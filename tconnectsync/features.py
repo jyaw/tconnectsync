@@ -16,14 +16,13 @@ DEFAULT_FEATURES = [
 ALL_FEATURES = [
     BASAL,
     BOLUS,
-    IOB,
+    #IOB, # Removing since there's an issue with ws2 timeout
     PUMP_EVENTS
 ]
-
 
 # These modes are not yet ready for wide use.
 if ENABLE_TESTING_MODES:
     ALL_FEATURES += [
-        BOLUS_BG,
+        #BOLUS_BG, # Removing since there's an issue with ws2 timeout
         CGM
-    ]
+]

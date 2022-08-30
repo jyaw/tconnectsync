@@ -22,6 +22,7 @@ from .sync.iob import (
 )
 from .sync.cgm import (
     process_cgm_events,
+    process_ciq_cgm_events,
     ns_write_cgm_events
 )
 from .sync.pump_events import (
@@ -127,6 +128,21 @@ def process_time_range(tconnect, nightscout, time_start, time_end, pretend, feat
             logger.debug("Writing CGM events")
             added += ns_write_cgm_events(nightscout, cgmData, pretend, time_start=time_start, time_end=time_end)
             logger.debug("Finished writing CGM events")
+
+    """
+    Since the ws2/csv capability is out due to ws2 timeouts, transitioning to using Control IQ CGM events.
+    The logic below uses a new process function specifically for handling differences between ws2 and ciq reading data,
+    then the cgmData (which should look identical after process_cgm_events or process_ciq_cgm_events) goes to the same 
+    ns write function.
+    """
+    if ciqReadingData:
+        cgmData = None
+        if CGM in features:
+            logger.debug("Processing ControlIQ CGM events")
+            cgmData = process_ciq_cgm_events(ciqReadingData)
+            logger.debug("Writing ControlIQ CGM events")
+            added += ns_write_cgm_events(nightscout, cgmData, pretend, time_start=time_start, time_end=time_end)
+            logger.debug("Finished writing ControlIQ CGM events")
 
     if BASAL in features:
         basalEvents = process_ciq_basal_events(ciqTherapyTimelineData)

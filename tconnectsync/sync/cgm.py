@@ -7,11 +7,24 @@ from ..parser.nightscout import NightscoutEntry
 
 logger = logging.getLogger(__name__)
 
+"""
+Process function specifically for ws2 ControlIQ processed readings
+"""
 def process_cgm_events(readingData):
     data = []
     for r in readingData:
         data.append(TConnectEntry.parse_reading_entry(r))
     
+    return data
+
+"""
+Process function specifically for ControlIQ CGMTherapyEvent readings
+"""
+def process_ciq_cgm_events(readingData):
+    data = []
+    for r in readingData:
+        data.append(TConnectEntry.parse_ciq_reading_entry(r))
+
     return data
 
 """

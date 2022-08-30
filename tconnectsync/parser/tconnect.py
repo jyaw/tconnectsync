@@ -133,6 +133,14 @@ class TConnectEntry:
             "type": data["Description"]
         }
 
+    @staticmethod
+    def parse_ciq_reading_entry(data):
+        return {
+            "time": TConnectEntry._datetime_parse(data.eventDateTime).format(),
+            "bg": data.egv,
+            "type": data.type
+        }
+
     ACTIVITY_EVENTS = { 1: "Sleep", 2: "Exercise", 3: "AutoBolus", 4: "CarbOnly" }
 
     @staticmethod
